@@ -1,8 +1,7 @@
-import Cluster from "discord-hybrid-sharding";
-
+import Cluster from 'discord-hybrid-sharding';
 
 declare module '@sapphire/framework' {
-    interface SapphireClient {
-        cluster: Cluster.Client;
-    }
+  interface SapphireClient {
+    cluster: Cluster.Client;
+  }
 }
