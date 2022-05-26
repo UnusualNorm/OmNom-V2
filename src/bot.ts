@@ -10,6 +10,7 @@ const client = new SapphireClient({
   intents: ['GUILDS', 'GUILD_MESSAGES'],
   shards: Cluster.data.SHARD_LIST,
   shardCount: Cluster.data.TOTAL_SHARDS,
+  fetchPrefix: () => process.env.DISCORD_PREFIX,
 });
 
 // Attach the cluster and login
