@@ -8,7 +8,7 @@
   "scripts": {
     "start": "node .",
     "dev": "nodemon --exec \"npm run build && node\" .",
-    "dev:start": "npm run build && ts-node src/index.ts",
+    "dev:start": "npm run build && node .",
     "lint": "prettier -c -w . && eslint --fix",
     "build": "yarn build:clean && yarn build:copy && tsc",
     "build:clean": "rimraf dist/ lib/",

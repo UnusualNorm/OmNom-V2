@@ -11,7 +11,7 @@ ApplyOptions<CommandOptions>({
 });
 export class PingCommand extends Command {
   public async chatInputRun(interaction: Command.ChatInputInteraction) {
-    // Let the user know we recieved the action
+    // Reply to the interaction to guage the ping
     const msg = await interaction.reply({
       content: `Ping?`,
       ephemeral: true,
