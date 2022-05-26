@@ -1,16 +1,20 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { isMessageInstance } from '@sapphire/discord.js-utilities';
 import { Command, CommandOptions } from '@sapphire/framework';
+import { ApplicationCommandType } from 'discord-api-types/v10';
 
 ApplyOptions<CommandOptions>({
   name: 'ping',
-  description: 'Ping bot to see if it is alive',
+  description: "Ping the bot to see if it's alive!",
   chatInputCommand: {
     register: true,
   },
 });
+
 export class PingCommand extends Command {
-  public async chatInputRun(interaction: Command.ChatInputInteraction) {
+  async ping(
+    interaction: Command.ChatInputInteraction | Command.ContextMenuInteraction
+  ) {
     // Reply to the interaction to guage the ping
     const msg = await interaction.reply({
       content: `Ping?`,
@@ -32,5 +36,25 @@ export class PingCommand extends Command {
 
     // The interaction "failed" to send
     return interaction.editReply('Failed to retrieve ping :(');
+  }
+
+  chatInputRun(interaction: Command.ChatInputInteraction) {
+    return this.ping(interaction);
+  }
+
+  contextMenuRun(interaction: Command.ContextMenuInteraction) {
+    return this.ping(interaction);
+  }
+
+  registerApplicationCommands(registry: Command.Registry) {
+    registry.registerContextMenuCommand((builder) =>
+      builder.setName('ping').setType(ApplicationCommandType.Message)
+    );
+
+    registry.registerChatInputCommand((builder) =>
+      builder
+        .setName('ping')
+        .setDescription("Ping the bot to see if it's alive!")
+    );
   }
 }

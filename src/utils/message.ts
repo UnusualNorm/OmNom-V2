@@ -41,9 +41,7 @@ export async function filterMessage(message: Message, filters: string[]) {
 
   // Make sure we have permissions
   const me = message.guild.me;
-  if (
-    !channel.permissionsFor(me).has('MANAGE_MESSAGES')
-  )
+  if (!channel.permissionsFor(me).has('MANAGE_MESSAGES'))
     throw new Error('PERMISSIONS');
 
   // Make sure we have valid filters
