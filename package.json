@@ -7,6 +7,7 @@
   "license": "MIT",
   "scripts": {
     "start": "node .",
+    "start:server": "node dist/server.js",
     "dev": "nodemon --exec \"npm run build && node\" .",
     "dev:start": "npm run build && node .",
     "lint": "prettier -c -w . && eslint --fix",
@@ -23,10 +24,9 @@
     "discord-hybrid-sharding": "^1.5.3",
     "discord.js": "^13.7.0",
     "dotenv": "^16.0.1",
-    "mysql": "^2.18.1"
+    "mysql2": "^2.3.3"
   },
   "devDependencies": {
-    "@types/mysql": "^2.15.21",
     "@types/node": "^17.0.35",
     "@typescript-eslint/eslint-plugin": "^5.26.0",
     "@typescript-eslint/parser": "^5.26.0",

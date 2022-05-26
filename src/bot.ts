@@ -1,5 +1,5 @@
 import { SapphireClient } from '@sapphire/framework';
-import MySql from 'mysql';
+import MySql from 'mysql2';
 import Cluster from 'discord-hybrid-sharding';
 
 // Make sure we have a token

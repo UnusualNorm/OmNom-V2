@@ -1,5 +1,5 @@
 import Cluster from 'discord-hybrid-sharding';
-import MySql from 'mysql';
+import MySql from 'mysql2';
 
 declare module '@sapphire/framework' {
   interface SapphireClient {
