@@ -5,12 +5,12 @@ import { Client } from 'discord-cross-hosting';
 
 // Make sure we have a method to get shard requests (Bridge OR Token)
 const serverIP = process.env.SERVER_IP;
-const token = process.env.DISCORD_TOKEN;
-if (!token) throw new Error('DISCORD_TOKEN not defined in environment...');
+const discord_token = process.env.DISCORD_TOKEN;
+if (!discord_token) throw new Error('DISCORD_TOKEN not defined in environment...');
 
 // Create the shard manager and log it's actions
 const manager = new Cluster.Manager(path.join(__dirname, 'bot.js'), {
-  token,
+  token: discord_token,
 });
 manager.on('debug', console.debug);
 manager.on('clusterCreate', (cluster) =>
@@ -18,21 +18,21 @@ manager.on('clusterCreate', (cluster) =>
 );
 
 /**
- * Allow for connection to a remote discord-cross-hosting bridge.
+ * Allow for connection to a remote discord-cross-hosting server.
  * Else we just start the manager
  */
 if (serverIP) {
   // Make sure we have the required data
   const serverPort = parseInt(process.env.SERVER_PORT) || 4444;
-  const authToken = process.env.SERVER_TOKEN;
-  if (!authToken) throw new Error('SERVER_TOKEN not defined in environment...');
+  const serverAuthToken = process.env.SERVER_TOKEN;
+  if (!serverAuthToken) throw new Error('SERVER_TOKEN not defined in environment...');
 
   // Connect to the server
   const client = new Client({
     agent: 'bot',
     host: serverIP,
     port: serverPort,
-    authToken,
+    authToken: serverAuthToken,
   });
   client.on('debug', console.debug);
   client.connect();

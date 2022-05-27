@@ -12,6 +12,7 @@ ApplyOptions<CommandOptions>({
 });
 
 export class PingCommand extends Command {
+  // Main logic
   async ping(
     interaction: Command.ChatInputInteraction | Command.ContextMenuInteraction
   ) {
@@ -38,19 +39,23 @@ export class PingCommand extends Command {
     return interaction.editReply('Failed to retrieve ping :(');
   }
 
+  // Redirect chat input to main logic
   chatInputRun(interaction: Command.ChatInputInteraction) {
     return this.ping(interaction);
   }
 
+  // Redirect context menu input to main logic
   contextMenuRun(interaction: Command.ContextMenuInteraction) {
     return this.ping(interaction);
   }
 
   registerApplicationCommands(registry: Command.Registry) {
+    // Register context menu command
     registry.registerContextMenuCommand((builder) =>
       builder.setName('ping').setType(ApplicationCommandType.Message)
     );
 
+    // Register chat input command
     registry.registerChatInputCommand((builder) =>
       builder
         .setName('ping')
