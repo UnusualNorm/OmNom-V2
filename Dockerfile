@@ -20,6 +20,7 @@ WORKDIR /root
 
 # Install production dependencies
 COPY package*.json ./
+RUN apk add -U tor
 RUN yarn install --prod
 
 # Run the production build

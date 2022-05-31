@@ -19,9 +19,7 @@ manager.on('clusterCreate', (cluster) =>
   console.info(`Launched new cluster: #${cluster.id}!`)
 );
 
-installTor()
-  .then(() => console.warn('Tor process exited...'))
-  .catch(console.error);
+installTor().then(() => console.warn('Tor process exited...'));
 
 /**
  * Allow for connection to a remote discord-cross-hosting server.
