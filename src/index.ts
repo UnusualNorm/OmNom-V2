@@ -2,20 +2,26 @@ import 'dotenv/config';
 import path from 'path';
 import Cluster from 'discord-hybrid-sharding';
 import { Client } from 'discord-cross-hosting';
+import { installTor } from './utils';
 
 // Make sure we have a method to get shard requests (Bridge OR Token)
 const serverIP = process.env.SERVER_IP;
-const discord_token = process.env.DISCORD_TOKEN;
-if (!discord_token) throw new Error('DISCORD_TOKEN not defined in environment...');
+const discordToken = process.env.DISCORD_TOKEN;
+if (!discordToken)
+  throw new Error('DISCORD_TOKEN not defined in environment...');
 
 // Create the shard manager and log it's actions
 const manager = new Cluster.Manager(path.join(__dirname, 'bot.js'), {
-  token: discord_token,
+  token: discordToken,
 });
 manager.on('debug', console.debug);
 manager.on('clusterCreate', (cluster) =>
   console.info(`Launched new cluster: #${cluster.id}!`)
 );
+
+installTor()
+  .then(() => console.warn('Tor process exited...'))
+  .catch(console.error);
 
 /**
  * Allow for connection to a remote discord-cross-hosting server.
@@ -25,7 +31,8 @@ if (serverIP) {
   // Make sure we have the required data
   const serverPort = parseInt(process.env.SERVER_PORT) || 4444;
   const serverAuthToken = process.env.SERVER_TOKEN;
-  if (!serverAuthToken) throw new Error('SERVER_TOKEN not defined in environment...');
+  if (!serverAuthToken)
+    throw new Error('SERVER_TOKEN not defined in environment...');
 
   // Connect to the server
   const client = new Client({

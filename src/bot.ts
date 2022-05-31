@@ -1,7 +1,7 @@
 import { SapphireClient } from '@sapphire/framework';
+import Cluster from 'discord-hybrid-sharding';
 import MySQL2 from 'mysql2/promise';
 import { MySQL2Extended } from 'mysql2-extended';
-import Cluster from 'discord-hybrid-sharding';
 
 // Make sure we have a token
 const discordToken = process.env.DISCORD_TOKEN;
@@ -32,29 +32,3 @@ const dbPool = MySQL2.createPool({
 // Connect and attach to database
 const db = new MySQL2Extended(dbPool);
 client.db = db;
-
-// Update the bot presence
-const updatePresence = async () => {
-  // Make sure we're the main cluster
-  if (client.cluster.id === 0) {
-    // Get a count of all guilds across shards and clusters
-    const guildCount = client.cluster.broadcastEval((c) =>
-      c.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0)
-    );
-
-    // Set the presence
-    client.user.presence.set({
-      activities: [
-        {
-          type: 'WATCHING',
-          name: `over ${await guildCount} servers!`,
-          url: 'https://twitch.tv/unusualnorm',
-        },
-      ],
-    });
-  }
-}
-updatePresence();
-
-// Every 10 minutes, update the bot presence
-setInterval(updatePresence, 10 * 60 * 1000);

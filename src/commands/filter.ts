@@ -59,7 +59,15 @@ export class FilterCommand extends Command {
         .setName('filter')
         .setDescription('Mange all your filter needs!')
         .addSubcommand((command) =>
-          command.setName('add').setDescription('Add a filter!').addRoleOption(option => option.setRequired(false).setName('role').setDescription('The role to add the filter to!'))
+          command
+            .setName('add')
+            .setDescription('Add a filter!')
+            .addRoleOption((option) =>
+              option
+                .setRequired(false)
+                .setName('role')
+                .setDescription('The role to add the filter to!')
+            )
         )
         .addSubcommand((command) =>
           command.setName('remove').setDescription('Remove a filter!')
@@ -68,7 +76,9 @@ export class FilterCommand extends Command {
           command.setName('clear').setDescription('Clear all filters!')
         )
         .addSubcommand((command) =>
-          command.setName('exclude').setDescription('Exclude from all previous filters!')
+          command
+            .setName('exclude')
+            .setDescription('Exclude from all previous filters!')
         )
         .addSubcommand((command) =>
           command

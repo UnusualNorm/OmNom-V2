@@ -9,7 +9,8 @@
     "removeComments": true,
     "preserveConstEnums": true,
     "skipLibCheck": true,
-    "outDir": "dist/"
+    "outDir": "dist/",
+    "inlineSourceMap": true
   },
   "include": ["src/"],
   "exclude": ["node_modules/", "dist/"]
