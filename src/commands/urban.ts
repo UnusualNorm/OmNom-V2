@@ -12,9 +12,8 @@ ApplyOptions<CommandOptions>({
 });
 
 export class FilterCommand extends Command {
-  // Use http.get to make a request to the Urban Dictionary API
-  // Use the "term" option to get the term to lookup
   async chatInputRun(interaction: Command.ChatInputInteraction) {
+    try {
     // This is going to take a bit...
     // Let's make sure discord doesn't timeout us
     await interaction.deferReply();
@@ -27,7 +26,7 @@ export class FilterCommand extends Command {
     const term = interaction.options.getString('term');
     const res = await urbanRequest(term);
     const entry = res.list[0];
-    if (!entry) return interaction.reply('No definition found :(');
+    if (!entry) return interaction.editReply('No definition found :(');
 
     // Some words are surrounded by square brackets,
     // Remove the brackets so we have the full definition
@@ -62,6 +61,11 @@ export class FilterCommand extends Command {
     embed.setAuthor(embedAuthor);
     embed.setFooter(embedFooter);
     return interaction.editReply({ embeds: [embed] });
+  } catch (error) {
+    console.error(`[ERROR] (urban) ${error.message}`);
+    if (interaction.deferred) interaction.editReply('Something went wrong!');
+    else interaction.reply('Something went wrong!');
+  }
   }
 
   registerApplicationCommands(registry: Command.Registry) {
