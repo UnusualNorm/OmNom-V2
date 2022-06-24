@@ -59,7 +59,7 @@ export class FilterCommand extends Command {
       return message.reply(
         'This command can only be used when replying to a message!'
       );
-    if (!message.channel.permissionsFor(message.author).has('MANAGE_MESSAGES'))
+    if (!message.channel.permissionsFor(message.member).has('MANAGE_MESSAGES'))
       return message.reply('You do not have permission to use this command!');
 
     if (
@@ -102,6 +102,9 @@ export class FilterCommand extends Command {
       `CREATE TABLE IF NOT EXISTS guild_${interaction.guildId}_filters (filter VARCHAR(255), id VARCHAR(255), idType VARCHAR(255))`
     );
 
+    if (!(interaction.member instanceof GuildMember)) return interaction.editReply('Failed to fetch your profile... (Try again?)');
+    if (!interaction.member.permissions.has('MANAGE_MESSAGES')) return interaction.editReply('You do not have permission to use this command!');
+
     const filterName = interaction.options.getString('filter');
     if (!filterMap.has(filterName) && filterName != 'exclude')
       return interaction.editReply(`Invalid filter: ${filterName}...`);
@@ -138,6 +141,9 @@ export class FilterCommand extends Command {
     await this.container.client.db.query(
       `CREATE TABLE IF NOT EXISTS guild_${interaction.guildId}_filters (filter VARCHAR(255), id VARCHAR(255), idType VARCHAR(255))`
     );
+
+    if (!(interaction.member instanceof GuildMember)) return interaction.editReply('Failed to fetch your profile... (Try again?)');
+    if (!interaction.member.permissions.has('MANAGE_MESSAGES')) return interaction.editReply('You do not have permission to use this command!');
 
     const filterName = interaction.options.getString('filter');
     if (!filterMap.has(filterName) && filterName != 'exclude')
@@ -176,10 +182,10 @@ export class FilterCommand extends Command {
     );
 
     const target =
-      interaction.options.getMentionable('target') || interaction.member;
+      interaction.options.getMember('target') || interaction.member;
     if (!(target instanceof GuildMember))
       return interaction.editReply(
-        'Failed to load the interaction... (Try again?)'
+        'Failed to load the target... (Try again?)'
       );
 
     const roleIds = target.roles.cache.map((role) => role.id);
@@ -246,6 +252,9 @@ export class FilterCommand extends Command {
     await this.container.client.db.query(
       `CREATE TABLE IF NOT EXISTS guild_${interaction.guildId}_filters (filter VARCHAR(255), id VARCHAR(255), idType VARCHAR(255))`
     );
+
+    if (!(interaction.member instanceof GuildMember)) return interaction.editReply('Failed to fetch your profile... (Try again?)');
+    if (!interaction.member.permissions.has('MANAGE_MESSAGES')) return interaction.editReply('You do not have permission to use this command!');
 
     const mentionable = interaction.options.getMentionable('target');
     if (!(mentionable instanceof GuildMember) && !(mentionable instanceof Role))
@@ -359,7 +368,7 @@ export class FilterCommand extends Command {
             command
               .setName('active')
               .setDescription('List all the filters being applied to a target!')
-              .addMentionableOption((option) =>
+              .addUserOption((option) =>
                 option
                   .setRequired(false)
                   .setName('target')
