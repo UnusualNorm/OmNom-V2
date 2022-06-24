@@ -4,13 +4,10 @@ import Cluster from 'discord-hybrid-sharding';
 import { Client } from 'discord-cross-hosting';
 import { installTor } from './utils';
 
-// Make sure we have a method to get shard requests (Bridge OR Token)
 const serverIP = process.env.SERVER_IP;
 const discordToken = process.env.DISCORD_TOKEN;
-if (!discordToken)
-  throw new Error('DISCORD_TOKEN not defined in environment...');
+if (!discordToken) throw new Error('No Discord token found... (DISCORD_TOKEN)');
 
-// Create the shard manager and log it's actions
 const manager = new Cluster.Manager(path.join(__dirname, 'bot.js'), {
   token: discordToken,
 });
@@ -21,18 +18,12 @@ manager.on('clusterCreate', (cluster) =>
 
 installTor().then(() => console.warn('Tor process exited...'));
 
-/**
- * Allow for connection to a remote discord-cross-hosting server.
- * Else we just start the manager
- */
 if (serverIP) {
-  // Make sure we have the required data
   const serverPort = parseInt(process.env.SERVER_PORT) || 4444;
   const serverAuthToken = process.env.SERVER_TOKEN;
   if (!serverAuthToken)
-    throw new Error('SERVER_TOKEN not defined in environment...');
+    throw new Error('No server authentication token found... (SERVER_TOKEN)');
 
-  // Connect to the server
   const client = new Client({
     agent: 'bot',
     host: serverIP,
@@ -42,14 +33,15 @@ if (serverIP) {
   client.on('debug', console.debug);
   client.connect();
 
-  // Attach server to manage the client
   client.listen(manager);
   client
     .requestShardData()
     .then((e) => {
-      // Update our manager with existing data
       if (!e) return;
       if (!e.shardList) return;
+
+      // The shard client doesn't automatically update with the existing data
+      // We need to do that manually
       manager.totalShards = e.totalShards;
       manager.totalClusters = e.shardList.length;
       manager.shardList = e.shardList;

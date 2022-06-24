@@ -1,16 +1,14 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import { Command, CommandOptions } from '@sapphire/framework';
+import { Command, RegisterBehavior } from '@sapphire/framework';
 import { EmbedAuthorData, MessageEmbed, MessageEmbedFooter } from 'discord.js';
 import { urbanRequest, getFakeFace } from '../utils';
 
-ApplyOptions<CommandOptions>({
+/*
+@ApplyOptions<Command.Options>({
   name: 'urban',
   description: 'Lookup a definition from the Urban Dictionary!',
-  chatInputCommand: {
-    register: true,
-  },
-});
-
+})
+*/
 export class FilterCommand extends Command {
   async chatInputRun(interaction: Command.ChatInputInteraction) {
     try {
@@ -70,16 +68,20 @@ export class FilterCommand extends Command {
 
   registerApplicationCommands(registry: Command.Registry) {
     // Register chat input command
-    registry.registerChatInputCommand((builder) =>
-      builder
-        .setName('urban')
-        .setDescription('Look up a definition from the Urban Dictionary!')
-        .addStringOption((option) =>
-          option
-            .setRequired(true)
-            .setName('term')
-            .setDescription('The term to lookup!')
-        )
+    registry.registerChatInputCommand(
+      (builder) =>
+        builder
+          .setName('urban')
+          .setDescription('Look up a definition from the Urban Dictionary!')
+          .addStringOption((option) =>
+            option
+              .setRequired(true)
+              .setName('term')
+              .setDescription('The term to lookup!')
+          ),
+      {
+        behaviorWhenNotIdentical: RegisterBehavior.Overwrite,
+      }
     );
   }
 }

@@ -38,7 +38,7 @@ export function messageToWebhookOptions(
 
   // If the user has a nickname, use it
   let username = author.username;
-  if (member.nickname) username = member.nickname;
+  if (!message.webhookId && member.nickname) username = member.nickname;
 
   // Files for webhooks are not the same as files for messages
   const files = attachments.toJSON();

@@ -1,16 +1,14 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import { isMessageInstance } from '@sapphire/discord.js-utilities';
-import { Command, CommandOptions } from '@sapphire/framework';
-import { ApplicationCommandType } from 'discord-api-types/v10';
+import { Command, RegisterBehavior } from '@sapphire/framework';
+import { ApplicationCommandType } from 'discord-api-types/v9';
+import { Message } from 'discord.js';
 
-ApplyOptions<CommandOptions>({
+/*
+@ApplyOptions<Command.Options>({
   name: 'ping',
   description: "Ping the bot to see if it's alive!",
-  chatInputCommand: {
-    register: true,
-  },
-});
-
+})
+*/
 export class PingCommand extends Command {
   // Main logic
   async ping(
@@ -24,7 +22,7 @@ export class PingCommand extends Command {
     });
 
     // Make sure we have a Message, not an APIMessage
-    if (isMessageInstance(msg)) {
+    if (msg instanceof Message) {
       // Calculate the ping
       const diff = msg.createdTimestamp - interaction.createdTimestamp;
       const ping = Math.round(this.container.client.ws.ping);
@@ -56,10 +54,14 @@ export class PingCommand extends Command {
     );
 
     // Register chat input command
-    registry.registerChatInputCommand((builder) =>
-      builder
-        .setName('ping')
-        .setDescription("Ping the bot to see if it's alive!")
+    registry.registerChatInputCommand(
+      (builder) =>
+        builder
+          .setName('ping')
+          .setDescription("Ping the bot to see if it's alive!"),
+      {
+        behaviorWhenNotIdentical: RegisterBehavior.Overwrite,
+      }
     );
   }
 }

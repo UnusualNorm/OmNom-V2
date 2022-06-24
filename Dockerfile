@@ -1,29 +1,47 @@
-# ---- BUILDER ----
-# Setup production builder
-FROM node:16-alpine as builder
-WORKDIR /root
+######## BUILDER ########
 
-# Install dependencies
-COPY package*.json ./
+# Set the base image
+FROM node:16-alpine as builder
+
+# Set environment variables
+ENV USER root
+ENV HOME /root
+
+# Set working directory
+WORKDIR $HOME
+
+# Copy project files
+COPY . .
+
+# Install prerequisites
 RUN yarn install
 
 # Build the project
-COPY . .
 RUN yarn build
-# ---- END BUILDER ----
 
+######## INSTALL ########
 
-# ---- APP ----
-# Setup production executor
-FROM node:16-alpine as app
-WORKDIR /root
+# Set the base image
+FROM node:16-alpine
 
-# Install production dependencies
-COPY package*.json ./
-RUN apk add -U tor
+# Set environment variables
+ENV USER root
+ENV HOME /root
+
+# Set working directory
+WORKDIR $HOME
+
+# Copy project files
+COPY package.json ./
+COPY yarn.lock ./
+
+# Copy project files from builder
+COPY --from=builder /root/dist ./
+
+# Install prerequisites
+# FIXME: tor-downloader does not currently work with alpine
+RUN apk add --no-cache tor
 RUN yarn install --prod
 
-# Run the production build
-COPY --from=builder /root/dist ./dist
+# Set default command
 CMD [ "yarn", "start" ]
-# ---- END APP ----

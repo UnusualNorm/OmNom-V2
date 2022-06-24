@@ -5,10 +5,11 @@ const totalMachines = parseInt(process.env.TOTAL_MACHINES) || 2;
 const port = parseInt(process.env.SERVER_PORT) || 4444;
 
 const authToken = process.env.SERVER_TOKEN;
-if (!authToken) throw new Error('SERVER_TOKEN not defined in environment...');
+if (!authToken)
+  throw new Error('No server authentication token found... (SERVER_TOKEN)');
 
 const token = process.env.DISCORD_TOKEN;
-if (!token) throw new Error('DISCORD_TOKEN not defined in environment...');
+if (!token) throw new Error('No Discord token found... (DISCORD_TOKEN)');
 
 const server = new Bridge({
   port,

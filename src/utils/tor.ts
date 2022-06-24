@@ -19,16 +19,6 @@ export async function installTor(): Promise<void> {
   // Check if we have Tor installed
   if (hasbin.sync('tor')) return startTor('tor');
 
-  // We don't have Tor installed, so we need to download it
-  // Unfortunately, the downloader doesn't currently support linux...
-  if (
-    process.platform != 'win32' &&
-    process.env.IGNORE_TOR_DOWNLOADER_ARCH != 'true'
-  )
-    throw new Error(
-      'Tor-downloader is not supported on this platform... (Set IGNORE_TOR_DOWNLOADER_ARCH=true to ignore)'
-    );
-
   // Directory where Tor will be retrieved
   const torPath = join(tmpdir(), 'Tor');
   const torDownloader = new TorDownloader();
