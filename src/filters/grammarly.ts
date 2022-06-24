@@ -15,15 +15,14 @@ const GrammarlyFilter: Filter = {
 
     return {
       ...message,
-      content: corrected?corrected:message.content,
+      content: corrected ? corrected : message.content,
     };
   },
 
   preview: async (text) => {
     const { corrected } = await client.analyse(text).then(correct);
-    console.log(await client.analyse(text).then(correct))
 
-    return corrected?corrected:text;
+    return corrected ? corrected : text;
   },
 };
 

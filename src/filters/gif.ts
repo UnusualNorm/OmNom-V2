@@ -2,7 +2,7 @@
 import { client } from 'tenorjs';
 import { Filter } from '../types';
 const Tenor = client({
-  Key: process.env.TENOR_APIKEY||'LIVDSRZULELA',
+  Key: process.env.TENOR_APIKEY || 'LIVDSRZULELA',
   Filter: 'off',
   Locale: 'en_US',
   MediaFilter: 'minimal',
