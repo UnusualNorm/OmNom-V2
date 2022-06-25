@@ -14,9 +14,7 @@ import {
 })
 export class FilterListener extends Listener {
   async run(message: Message) {
-    const { channel, guild, guildId, channelId, member, author } = message;
-
-    if (author.bot) return;
+    if (message.author.bot) return;
     if (
       message.content.startsWith(
         (await message.client.fetchPrefix(message)).toString()
@@ -25,24 +23,28 @@ export class FilterListener extends Listener {
       return;
 
     if (
-      !(channel instanceof TextChannel) &&
-      !(channel instanceof ThreadChannel)
+      !(message.channel instanceof TextChannel) &&
+      !(message.channel instanceof ThreadChannel)
     )
       return;
+
+    await this.container.client.db.query(
+      `CREATE TABLE IF NOT EXISTS guild_${message.guildId}_filters (filter VARCHAR(255), id VARCHAR(255), idType VARCHAR(255))`
+    );
 
     if (
-      !channel.permissionsFor(guild.me).has('MANAGE_MESSAGES') ||
-      !channel.permissionsFor(guild.me).has('MANAGE_WEBHOOKS')
+      !message.channel.permissionsFor(message.guild.me).has('MANAGE_MESSAGES') ||
+      !message.channel.permissionsFor(message.guild.me).has('MANAGE_WEBHOOKS')
     )
       return;
 
-    const roleIds = member.roles.cache.map((role) => role.id);
+    const roleIds = message.member.roles.cache.map((role) => role.id);
     const filters = await getActiveFilters(
       this.container.client.db,
-      member.id,
-      channelId,
+      message.member.id,
+      message.channelId,
       roleIds,
-      guildId
+      message.guildId
     );
     if (!filters.length) return;
 
@@ -50,7 +52,7 @@ export class FilterListener extends Listener {
     for (const { filter } of filters)
       webhookOptions = await filter(webhookOptions);
 
-    await sendGetCreateWebhook(channel, webhookOptions);
+    await sendGetCreateWebhook(message.channel, webhookOptions);
     await message.delete();
   }
 }

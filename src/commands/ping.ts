@@ -3,65 +3,29 @@ import { Command, RegisterBehavior } from '@sapphire/framework';
 import { ApplicationCommandType } from 'discord-api-types/v9';
 import { Message } from 'discord.js';
 
-/*
 @ApplyOptions<Command.Options>({
   name: 'ping',
   description: "Ping the bot to see if it's alive!",
+  chatInputCommand: {
+    register: true,
+    behaviorWhenNotIdentical: RegisterBehavior.Overwrite,
+  },
 })
-*/
 export class PingCommand extends Command {
-  // Main logic
-  async ping(
-    interaction: Command.ChatInputInteraction | Command.ContextMenuInteraction
-  ) {
-    // Reply to the interaction to guage the ping
+  async chatInputRun(interaction: Command.ChatInputInteraction) {
     const msg = await interaction.reply({
       content: `Ping?`,
       ephemeral: true,
       fetchReply: true,
     });
 
-    // Make sure we have a Message, not an APIMessage
     if (msg instanceof Message) {
-      // Calculate the ping
       const diff = msg.createdTimestamp - interaction.createdTimestamp;
       const ping = Math.round(this.container.client.ws.ping);
 
-      // Update the interaction reply with ping
       return interaction.editReply(
         `Pong 🏓! (Round trip took: ${diff}ms. Heartbeat: ${ping}ms.)`
       );
     }
-
-    // The interaction "failed" to send
-    return interaction.editReply('Failed to retrieve ping :(');
-  }
-
-  // Redirect chat input to main logic
-  chatInputRun(interaction: Command.ChatInputInteraction) {
-    return this.ping(interaction);
-  }
-
-  // Redirect context menu input to main logic
-  contextMenuRun(interaction: Command.ContextMenuInteraction) {
-    return this.ping(interaction);
-  }
-
-  registerApplicationCommands(registry: Command.Registry) {
-    // Register context menu command
-    registry.registerContextMenuCommand((builder) =>
-      builder.setName('ping').setType(ApplicationCommandType.Message)
-    );
-
-    // Register chat input command
-    registry.registerChatInputCommand(
-      (builder) =>
-        builder
-          .setName('ping')
-          .setDescription("Ping the bot to see if it's alive!"),
-      {
-        behaviorWhenNotIdentical: RegisterBehavior.Overwrite,
-      }
-    );
   }
 }

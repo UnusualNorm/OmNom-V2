@@ -4,7 +4,6 @@ import Cluster from 'discord-hybrid-sharding';
 import { Client } from 'discord-cross-hosting';
 import { installTor } from './utils';
 
-const serverIP = process.env.SERVER_IP;
 const discordToken = process.env.DISCORD_TOKEN;
 if (!discordToken) throw new Error('No Discord token found... (DISCORD_TOKEN)');
 
@@ -13,11 +12,12 @@ const manager = new Cluster.Manager(path.join(__dirname, 'bot.js'), {
 });
 manager.on('debug', console.debug);
 manager.on('clusterCreate', (cluster) =>
-  console.info(`Launched new cluster: #${cluster.id}!`)
+console.info(`Launched new cluster: #${cluster.id}!`)
 );
 
 installTor().then(() => console.warn('Tor process exited...'));
 
+const serverIP = process.env.SERVER_IP;
 if (serverIP) {
   const serverPort = parseInt(process.env.SERVER_PORT) || 4444;
   const serverAuthToken = process.env.SERVER_TOKEN;
