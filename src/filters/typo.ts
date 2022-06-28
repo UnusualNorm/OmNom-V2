@@ -56,7 +56,7 @@ function typoify(text: string) {
 const TypoFilter: Filter = {
   id: 'typo',
   name: 'Typo',
-  description: 'Oh slly me, I mde a tpyo!',
+  description: 'Oh slly me, I madde a tpyo!',
 
   filter: (message) => ({
     ...message,

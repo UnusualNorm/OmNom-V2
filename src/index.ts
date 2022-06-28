@@ -3,6 +3,7 @@ import path from 'path';
 import Cluster from 'discord-hybrid-sharding';
 import { Client } from 'discord-cross-hosting';
 import { installTor } from './utils';
+import { ClientPresence } from 'discord.js';
 
 const discordToken = process.env.DISCORD_TOKEN;
 if (!discordToken) throw new Error('No Discord token found... (DISCORD_TOKEN)');
@@ -11,9 +12,29 @@ const manager = new Cluster.Manager(path.join(__dirname, 'bot.js'), {
   token: discordToken,
 });
 manager.on('debug', console.debug);
-manager.on('clusterCreate', (cluster) =>
-console.info(`Launched new cluster: #${cluster.id}!`)
+manager.on('clusterCreate', (cluster) => 
+  cluster.on('ready', () => {
+    console.info(`Launched new cluster: #${cluster.id}!`);
+    updatePresences();
+  })
 );
+
+async function updatePresences() {
+  const out = await manager.broadcastEval((c) =>
+    c.user.setPresence({
+      activities: [
+        {
+          name: `${c.guilds.cache.size} Servers "Very Carefully"!`,
+          type: 'WATCHING',
+        },
+      ],
+    })
+  ).catch(err => console.error(err));
+  
+  if (!out) return false;
+  return out.every((res) => res instanceof ClientPresence);
+}
+setInterval(updatePresences, 60000);
 
 installTor().then(() => console.warn('Tor process exited...'));
 
