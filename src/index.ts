@@ -20,11 +20,16 @@ manager.on('clusterCreate', (cluster) =>
 );
 
 async function updatePresences() {
+  const guildCount = (await manager.broadcastEval(c => c.guilds.cache.size).catch(err => {
+    console.error(err);
+    return [0];
+  })).reduce((a, b) => a + b);
+
   const out = await manager.broadcastEval((c) =>
     c.user.setPresence({
       activities: [
         {
-          name: `${c.guilds.cache.size} Servers "Very Carefully"!`,
+          name: `${guildCount} Servers!`,
           type: 'WATCHING',
         },
       ],
