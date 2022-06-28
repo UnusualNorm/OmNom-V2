@@ -1,7 +1,7 @@
 import { Filter } from '../types';
 
-const typoify = (text: string) => {
-  const words = text.split(' ');
+function typoify(text: string) {
+  const words = text.split(" ");
   for (let i = 0; i < words.length; i++) {
     let word = words[i];
     const typoChoice = Math.floor(Math.random() * 3);
@@ -11,13 +11,13 @@ const typoify = (text: string) => {
         // Duplication of a letter
         const letterIndex = Math.floor(Math.random() * word.length);
         word =
-          word.substring(0, letterIndex) +
-          word.substring(letterIndex, letterIndex + 2);
+          word.substring(0, letterIndex + 1) +
+          word.substring(letterIndex);
         break;
       }
 
       case 1: {
-        // Missing a letter
+        // Delete a random letter
         const missingLetterIndex = Math.floor(Math.random() * word.length);
         word =
           word.substring(0, missingLetterIndex) +
@@ -26,22 +26,32 @@ const typoify = (text: string) => {
       }
 
       case 2: {
-        // Swapping two letters
-        const firstLetterIndex = Math.floor(Math.random() * word.length);
-        const secondLetterIndex = Math.floor(Math.random() * word.length);
+        // Swap two letters
+        let swapLetterIndex;
+        let swapLetter2Index;
+
+        if (word.split("").every((char, i, arr) => char === arr[0]))
+          word = typoify(word);
+
+        while (word[swapLetterIndex] == word[swapLetter2Index]) {
+          swapLetterIndex = Math.floor(Math.random() * word.length - 1);
+          swapLetter2Index = swapLetterIndex + 1;
+        }
+
         word =
-          word.substring(0, firstLetterIndex) +
-          word[secondLetterIndex] +
-          word[firstLetterIndex] +
-          word.substring(secondLetterIndex + 1);
+          word.substring(0, swapLetterIndex) +
+          word[swapLetter2Index] +
+          word[swapLetterIndex] +
+          word.substring(swapLetter2Index + 1);
+
         break;
       }
     }
 
     words[i] = word;
   }
-  return words.join(' ');
-};
+  return words.join(" ");
+}
 
 const TypoFilter: Filter = {
   id: 'typo',
