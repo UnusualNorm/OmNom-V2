@@ -25,16 +25,16 @@ async function updatePresences() {
     return [0];
   })).reduce((a, b) => a + b);
 
-  const out = await manager.broadcastEval((c) =>
-    c.user.setPresence({
+  const out = await manager.broadcastEval(`
+    this.user.setPresence({
       activities: [
         {
-          name: `${guildCount} Servers!`,
-          type: 'WATCHING',
-        },
-      ],
+          name: '${guildCount} Servers!',
+          type: 'WATCHING'
+        }
+      ]
     })
-  ).catch(err => console.error(err));
+  `).catch(err => console.error(err));
   
   if (!out) return false;
   return out.every((res) => res instanceof ClientPresence);
