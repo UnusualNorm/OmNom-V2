@@ -1,7 +1,7 @@
+import net from 'net';
 import fetch, { RequestInit, Response } from 'node-fetch';
 import { SocksProxyAgent } from 'socks-proxy-agent';
 const agent = new SocksProxyAgent('socks5://127.0.0.1:9050');
-import net from 'net';
 
 export class Tor {
   opts: {
@@ -194,8 +194,8 @@ export class Tor {
     return this.sendCommand(str);
   }
 }
-
 const TorController = new Tor();
+
 export async function ReFetch(
   url: string,
   options?: RequestInit,
@@ -221,5 +221,27 @@ export async function ReFetch(
     console.error(e);
     await TorController.signalNewnym();
     return ReFetch(url, options, verifier);
+  }
+}
+
+export async function ReRun<Output>(
+  runner: () => Output,
+  verifier?: (out: Output) => boolean
+): Promise<Output> {
+  if (!TorController.connection) await TorController.connect();
+
+  try {
+    const out = await runner();
+
+    if (!runner && (!verifier || !verifier(out))) {
+      await TorController.signalNewnym();
+      return ReRun(runner, verifier);
+    }
+
+    return out;
+  } catch (e) {
+    console.error(e);
+    await TorController.signalNewnym();
+    return ReRun(runner, verifier);
   }
 }

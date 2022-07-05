@@ -32,7 +32,6 @@
     "mysql2-extended": "^1.1.1",
     "node-fetch": "2",
     "socks-proxy-agent": "^6.2.0",
-    "tenorjs": "^1.0.8",
     "uwuifier": "^4.0.5",
     "zalgo-js": "^1.0.0"
   },

@@ -12,7 +12,10 @@ import {
 } from 'discord.js';
 import filterMapP from '../filters/index.js';
 import { getActiveFilters } from '../utils/filters.js';
-import { messageToWebhookOptions, sendGetCreateWebhook } from '../utils/webhook.js';
+import {
+  messageToWebhookOptions,
+  sendGetCreateWebhook,
+} from '../utils/webhook.js';
 
 @ApplyOptions<Command.Options>({
   name: 'filter',
