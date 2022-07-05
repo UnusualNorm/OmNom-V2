@@ -1,6 +1,4 @@
-import fetch from 'node-fetch';
-import { SocksProxyAgent } from 'socks-proxy-agent';
-const agent = new SocksProxyAgent('socks5://127.0.0.1:9050');
+import { ReFetch } from './tor';
 
 export interface TPDNEOutput {
   generated: string;
@@ -9,12 +7,11 @@ export interface TPDNEOutput {
 }
 
 export async function getFakeFace() {
-  const res = await fetch(
-    `https://this-person-does-not-exist.com/en?new=${Date.now()}`,
-    { agent }
+  const res = await ReFetch(
+    `https://this-person-does-not-exist.com/en?new=${Date.now()}`
   );
 
-  const json: TPDNEOutput = await res.json();
+  const json: TPDNEOutput = JSON.parse(res);
   json.src = `https://this-person-does-not-exist.com${json.src}`;
   return json;
 }

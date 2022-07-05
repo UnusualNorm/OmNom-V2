@@ -1,4 +1,3 @@
-import { Filter } from '../types';
 import { MySQL2Extended } from 'mysql2-extended';
 import filterMapP from '../filters';
 

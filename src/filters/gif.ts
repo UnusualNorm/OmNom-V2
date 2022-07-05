@@ -1,6 +1,6 @@
 // @ts-ignore
 import { client } from 'tenorjs';
-import { Filter } from '../types';
+import { Filter } from '../types/filter';
 const Tenor = client({
   Key: process.env.TENOR_APIKEY || 'LIVDSRZULELA',
   Filter: 'off',

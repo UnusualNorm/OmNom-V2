@@ -1,7 +1,7 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Listener } from '@sapphire/framework';
 import { Message, TextChannel, ThreadChannel } from 'discord.js';
-import { messageToWebhookOptions, sendGetCreateWebhook } from '../utils';
+import { messageToWebhookOptions, sendGetCreateWebhook } from '../utils/webhook';
 
 @ApplyOptions<Listener.Options>({
   name: 'move',

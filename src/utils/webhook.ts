@@ -5,7 +5,7 @@ import {
   ThreadChannel,
   WebhookMessageOptions,
 } from 'discord.js';
-import { seperateThreadID } from './';
+import { seperateThreadID } from './channel';
 
 export async function getCreateWebhook(channel: TextChannel) {
   // Make sure we have permissions

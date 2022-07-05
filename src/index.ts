@@ -1,8 +1,10 @@
+// ---------------------------
+// ----- CLUSTER MANAGER -----
+// ---------------------------
+
 import 'dotenv/config';
 import path from 'path';
 import Cluster from 'discord-hybrid-sharding';
-import { Client } from 'discord-cross-hosting';
-import { installTor } from './utils';
 import { ClientPresence } from 'discord.js';
 
 const discordToken = process.env.DISCORD_TOKEN;
@@ -12,7 +14,7 @@ const manager = new Cluster.Manager(path.join(__dirname, 'bot.js'), {
   token: discordToken,
 });
 manager.on('debug', console.debug);
-manager.on('clusterCreate', (cluster) => 
+manager.on('clusterCreate', (cluster) =>
   cluster.on('ready', () => {
     console.info(`Launched new cluster: #${cluster.id}!`);
     updatePresences();
@@ -20,12 +22,18 @@ manager.on('clusterCreate', (cluster) =>
 );
 
 async function updatePresences() {
-  const guildCount = (await manager.broadcastEval(c => c.guilds.cache.size).catch(err => {
-    console.error(err);
-    return [0];
-  })).reduce((a, b) => a + b);
+  const guildCount = (
+    await manager
+      .broadcastEval((c) => c.guilds.cache.size)
+      .catch((err) => {
+        console.error(err);
+        return [0];
+      })
+  ).reduce((a, b) => a + b);
 
-  const out = await manager.broadcastEval(`
+  const out = await manager
+    .broadcastEval(
+      `
     this.user.setPresence({
       activities: [
         {
@@ -34,14 +42,55 @@ async function updatePresences() {
         }
       ]
     })
-  `).catch(err => console.error(err));
-  
+  `
+    )
+    .catch((err) => console.error(err));
+
   if (!out) return false;
   return out.every((res) => res instanceof ClientPresence);
 }
 setInterval(updatePresences, 60000);
 
-installTor().then(() => console.warn('Tor process exited...'));
+// ----------------------
+// ----- TOR SERVER -----
+// ----------------------
+
+import os from 'os';
+import cp from 'child_process';
+import { TorDownloader } from '@unnusualnorm/tor-downloader';
+import hasbin from 'hasbin';
+
+(async () => {
+  const startTor = async (torBinaryPath: string): Promise<void> => {
+    const torProcess = cp.spawn(torBinaryPath, ['--controlport', '9051']);
+    torProcess.on('close', () => startTor(torBinaryPath));
+
+    torProcess.stderr.on('data', (chunk) =>
+      console.error(String(chunk).trim())
+    );
+    torProcess.stdout.on('data', (chunk) => console.log(String(chunk).trim()));
+  };
+
+  if (hasbin.sync('tor')) return startTor('tor');
+
+  const torPath = path.join(os.tmpdir(), 'Tor');
+  const torDownloader = new TorDownloader();
+
+  await torDownloader.retrieve(torPath);
+  await torDownloader.addExecutionRigthsOnTorBinaryFile(torPath);
+
+  const torBinaryPath = path.join(
+    torPath,
+    torDownloader.getTorBinaryFilename()
+  );
+  await startTor(torBinaryPath);
+})();
+
+// ----------------------------------
+// ----- CLUSTER SERVER MANAGER -----
+// ----------------------------------
+
+import { Client } from 'discord-cross-hosting';
 
 const serverIP = process.env.SERVER_IP;
 if (serverIP) {

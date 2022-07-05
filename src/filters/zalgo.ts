@@ -1,4 +1,4 @@
-import { Filter } from '../types';
+import { Filter } from '../types/filter';
 import zalgo from 'zalgo-js';
 
 const ZalgoFilter: Filter = {

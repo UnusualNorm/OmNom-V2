@@ -1,4 +1,4 @@
-import { Filter } from '../types';
+import { Filter } from '../types/filter';
 
 const reverse = (text: string) => text.split('').reverse().join('');
 const ReverseFilter: Filter = {

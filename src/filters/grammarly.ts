@@ -1,5 +1,5 @@
 import { correct, Grammarly } from '@stewartmcgown/grammarly-api';
-import { Filter } from '../types';
+import { Filter } from '../types/filter';
 const client = new Grammarly({
   username: process.env.GRAMMARLY_USERNAME,
   password: process.env.GRAMMARLY_PASSWORD,

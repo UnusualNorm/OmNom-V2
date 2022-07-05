@@ -1,6 +1,5 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command, RegisterBehavior } from '@sapphire/framework';
-import { ApplicationCommandType } from 'discord-api-types/v9';
 import { Message } from 'discord.js';
 
 @ApplyOptions<Command.Options>({

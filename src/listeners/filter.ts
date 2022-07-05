@@ -1,11 +1,8 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Listener } from '@sapphire/framework';
 import { Message, TextChannel, ThreadChannel } from 'discord.js';
-import {
-  getActiveFilters,
-  messageToWebhookOptions,
-  sendGetCreateWebhook,
-} from '../utils';
+import { getActiveFilters } from '../utils/filters';
+import { messageToWebhookOptions, sendGetCreateWebhook } from '../utils/webhook';
 
 @ApplyOptions<Listener.Options>({
   name: 'filter',
@@ -33,7 +30,9 @@ export class FilterListener extends Listener {
     );
 
     if (
-      !message.channel.permissionsFor(message.guild.me).has('MANAGE_MESSAGES') ||
+      !message.channel
+        .permissionsFor(message.guild.me)
+        .has('MANAGE_MESSAGES') ||
       !message.channel.permissionsFor(message.guild.me).has('MANAGE_WEBHOOKS')
     )
       return;

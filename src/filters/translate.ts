@@ -1,4 +1,4 @@
-import { Filter } from '../types';
+import { Filter } from '../types/filter';
 import translate from '@vitalets/google-translate-api';
 import { SocksProxyAgent } from 'socks-proxy-agent';
 const agent = new SocksProxyAgent('socks5://127.0.0.1:9050');

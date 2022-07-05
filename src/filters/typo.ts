@@ -1,7 +1,7 @@
-import { Filter } from '../types';
+import { Filter } from '../types/filter';
 
 function typoify(text: string) {
-  const words = text.split(" ");
+  const words = text.split(' ');
   for (let i = 0; i < words.length; i++) {
     let word = words[i];
     const typoChoice = Math.floor(Math.random() * 3);
@@ -10,9 +10,7 @@ function typoify(text: string) {
       case 0: {
         // Duplication of a letter
         const letterIndex = Math.floor(Math.random() * word.length);
-        word =
-          word.substring(0, letterIndex + 1) +
-          word.substring(letterIndex);
+        word = word.substring(0, letterIndex + 1) + word.substring(letterIndex);
         break;
       }
 
@@ -30,7 +28,7 @@ function typoify(text: string) {
         let swapLetterIndex;
         let swapLetter2Index;
 
-        if (word.split("").every((char, i, arr) => char === arr[0]))
+        if (word.split('').every((char, i, arr) => char === arr[0]))
           word = typoify(word);
 
         while (word[swapLetterIndex] == word[swapLetter2Index]) {
@@ -50,7 +48,7 @@ function typoify(text: string) {
 
     words[i] = word;
   }
-  return words.join(" ");
+  return words.join(' ');
 }
 
 const TypoFilter: Filter = {

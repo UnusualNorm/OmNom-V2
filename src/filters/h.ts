@@ -1,6 +1,6 @@
 // https://github.com/dnorhoj/h/
 
-import { Filter } from '../types';
+import { Filter } from '../types/filter';
 
 function stringToBinary(str: string, spaceSeparatedOctets: boolean): string {
   function zeroPad(num: string) {

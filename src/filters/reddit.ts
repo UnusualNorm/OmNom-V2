@@ -1,4 +1,4 @@
-import { Filter } from '../types';
+import { Filter } from '../types/filter';
 
 const RedditFilter: Filter = {
   id: 'reddit',

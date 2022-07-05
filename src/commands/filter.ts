@@ -11,11 +11,8 @@ import {
   ThreadChannel,
 } from 'discord.js';
 import filterMapP from '../filters/index.js';
-import {
-  getActiveFilters,
-  messageToWebhookOptions,
-  sendGetCreateWebhook,
-} from '../utils';
+import { getActiveFilters } from '../utils/filters.js';
+import { messageToWebhookOptions, sendGetCreateWebhook } from '../utils/webhook.js';
 
 @ApplyOptions<Command.Options>({
   name: 'filter',
@@ -102,8 +99,14 @@ export class FilterCommand extends Command {
       `CREATE TABLE IF NOT EXISTS guild_${interaction.guildId}_filters (filter VARCHAR(255), id VARCHAR(255), idType VARCHAR(255))`
     );
 
-    if (!(interaction.member instanceof GuildMember)) return interaction.editReply('Failed to fetch your profile... (Try again?)');
-    if (!interaction.member.permissions.has('MANAGE_MESSAGES')) return interaction.editReply('You do not have permission to use this command!');
+    if (!(interaction.member instanceof GuildMember))
+      return interaction.editReply(
+        'Failed to fetch your profile... (Try again?)'
+      );
+    if (!interaction.member.permissions.has('MANAGE_MESSAGES'))
+      return interaction.editReply(
+        'You do not have permission to use this command!'
+      );
 
     const filterName = interaction.options.getString('filter');
     if (!filterMap.has(filterName) && filterName != 'exclude')
@@ -142,8 +145,14 @@ export class FilterCommand extends Command {
       `CREATE TABLE IF NOT EXISTS guild_${interaction.guildId}_filters (filter VARCHAR(255), id VARCHAR(255), idType VARCHAR(255))`
     );
 
-    if (!(interaction.member instanceof GuildMember)) return interaction.editReply('Failed to fetch your profile... (Try again?)');
-    if (!interaction.member.permissions.has('MANAGE_MESSAGES')) return interaction.editReply('You do not have permission to use this command!');
+    if (!(interaction.member instanceof GuildMember))
+      return interaction.editReply(
+        'Failed to fetch your profile... (Try again?)'
+      );
+    if (!interaction.member.permissions.has('MANAGE_MESSAGES'))
+      return interaction.editReply(
+        'You do not have permission to use this command!'
+      );
 
     const filterName = interaction.options.getString('filter');
     if (!filterMap.has(filterName) && filterName != 'exclude')
@@ -184,9 +193,7 @@ export class FilterCommand extends Command {
     const target =
       interaction.options.getMember('target') || interaction.member;
     if (!(target instanceof GuildMember))
-      return interaction.editReply(
-        'Failed to load the target... (Try again?)'
-      );
+      return interaction.editReply('Failed to load the target... (Try again?)');
 
     const roleIds = target.roles.cache.map((role) => role.id);
     const activeFilters = await getActiveFilters(
@@ -253,8 +260,14 @@ export class FilterCommand extends Command {
       `CREATE TABLE IF NOT EXISTS guild_${interaction.guildId}_filters (filter VARCHAR(255), id VARCHAR(255), idType VARCHAR(255))`
     );
 
-    if (!(interaction.member instanceof GuildMember)) return interaction.editReply('Failed to fetch your profile... (Try again?)');
-    if (!interaction.member.permissions.has('MANAGE_MESSAGES')) return interaction.editReply('You do not have permission to use this command!');
+    if (!(interaction.member instanceof GuildMember))
+      return interaction.editReply(
+        'Failed to fetch your profile... (Try again?)'
+      );
+    if (!interaction.member.permissions.has('MANAGE_MESSAGES'))
+      return interaction.editReply(
+        'You do not have permission to use this command!'
+      );
 
     const mentionable = interaction.options.getMentionable('target');
     if (!(mentionable instanceof GuildMember) && !(mentionable instanceof Role))

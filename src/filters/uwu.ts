@@ -1,4 +1,4 @@
-import { Filter } from '../types';
+import { Filter } from '../types/filter';
 import UWUifier from 'uwuifier';
 const uwu = new UWUifier();
 

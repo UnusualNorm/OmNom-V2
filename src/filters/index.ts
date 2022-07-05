@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { Filter } from '../types';
+import { Filter } from '../types/filter';
 
 export default (async function () {
   const filterMap = new Map<string, Filter>();

@@ -1,5 +1,5 @@
 import { Message, TextChannel, ThreadChannel } from 'discord.js';
-import { sendGetCreateWebhook, messageToWebhookOptions } from './';
+import { sendGetCreateWebhook, messageToWebhookOptions } from './webhook';
 import filterMapP from '../filters/index.js';
 import { isTextChannel, isThreadChannel } from '@sapphire/discord.js-utilities';
 
