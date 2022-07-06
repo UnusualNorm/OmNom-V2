@@ -7,6 +7,8 @@ export async function copyMessage(
   message: Message,
   channel: TextChannel | ThreadChannel
 ) {
+  if (message.partial) await message.fetch();
+
   const convertedMessage = messageToWebhookOptions(message);
   const sentMessage = await sendGetCreateWebhook(channel, convertedMessage);
   return sentMessage;
@@ -16,6 +18,8 @@ export async function moveMessage(
   message: Message,
   channel: TextChannel | ThreadChannel
 ) {
+  if (message.partial) await message.fetch();
+
   const victimChannel = message.channel;
   if (victimChannel.type != 'GUILD_TEXT') throw new Error('INVALID_CHANNEL');
 
@@ -29,6 +33,7 @@ export async function moveMessage(
 }
 
 export async function filterMessage(message: Message, filters: string[]) {
+  if (message.partial) await message.fetch();
   const filterMap = await filterMapP;
 
   const channel = message.channel;

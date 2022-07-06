@@ -13,23 +13,18 @@ import {
 })
 export class MoveListener extends Listener {
   async run(message: Message) {
+    if (message.partial) await message.fetch();
     if (message.author.bot) return;
 
     if (
       message.type != 'REPLY' ||
-      // Check if the message is just the prefix
+      // Check if the message "content" is just the prefix
       message.content.replace(/<#\d{17,19}>/, '').trim() !=
-        message.client.fetchPrefix(message)
-    )
-      return;
-
-    if (
-      !(message.channel instanceof TextChannel) &&
-      !(message.channel instanceof ThreadChannel)
-    )
-      return;
-
-    if (
+        message.client.fetchPrefix(message) ||
+      !(
+        message.channel instanceof TextChannel ||
+        message.channel instanceof ThreadChannel
+      ) ||
       !message.channel.permissionsFor(message.member).has('MANAGE_MESSAGES') ||
       !message.channel
         .permissionsFor(message.client.user)
@@ -41,12 +36,10 @@ export class MoveListener extends Listener {
     if (!channel) return;
 
     if (
-      !(channel instanceof TextChannel) &&
-      !(channel instanceof ThreadChannel)
+      !(channel instanceof TextChannel || channel instanceof ThreadChannel) ||
+      !channel.permissionsFor(message.member).has('MANAGE_WEBHOOKS')
     )
       return;
-
-    if (!channel.permissionsFor(message.member).has('MANAGE_WEBHOOKS')) return;
 
     const reference = await message.fetchReference();
     const webhookOptions = messageToWebhookOptions(reference);

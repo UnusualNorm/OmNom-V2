@@ -7,7 +7,14 @@ const discordToken = process.env.DISCORD_TOKEN;
 if (!discordToken) throw new Error('No Discord token found... (DISCORD_TOKEN)');
 
 const client = new SapphireClient({
-  intents: ['GUILDS', 'GUILD_MESSAGES'],
+  intents: [
+    'GUILDS',
+    'GUILD_MESSAGES',
+    'GUILD_MESSAGE_REACTIONS',
+    'DIRECT_MESSAGES',
+    'DIRECT_MESSAGE_REACTIONS',
+  ],
+  partials: ['USER', 'MESSAGE', 'CHANNEL', 'REACTION', 'GUILD_MEMBER', 'GUILD_SCHEDULED_EVENT'],
   shards: Cluster.data.SHARD_LIST,
   shardCount: Cluster.data.TOTAL_SHARDS,
   fetchPrefix: () => process.env.DISCORD_PREFIX || '~',
