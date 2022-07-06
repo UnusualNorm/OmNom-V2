@@ -198,7 +198,7 @@ const TorController = new Tor();
 
 export async function ReFetch(
   url: string,
-  options?: RequestInit,
+  options: RequestInit = {},
   verifier: (res: Response, out: string) => boolean = (res) =>
     res.status >= 200 && res.status < 300
 ): Promise<string> {
@@ -225,15 +225,15 @@ export async function ReFetch(
 }
 
 export async function ReRun<Output>(
-  runner: () => Output,
-  verifier?: (out: Output) => boolean
+  runner: () => Output | Promise<Output>,
+  verifier: (out: Output) => boolean
 ): Promise<Output> {
   if (!TorController.connection) await TorController.connect();
 
   try {
     const out = await runner();
 
-    if (!runner && (!verifier || !verifier(out))) {
+    if (!verifier(out)) {
       await TorController.signalNewnym();
       return ReRun(runner, verifier);
     }

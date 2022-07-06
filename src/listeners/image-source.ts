@@ -13,13 +13,15 @@ type ReverseImageOutput = {
   enabled: true,
   event: 'messageReactionAdd',
 })
-export class FilterListener extends Listener {
+export class ImageSourceListener extends Listener {
   async run(messageReaction: MessageReaction, user: User) {
     if (messageReaction.partial) await messageReaction.fetch();
     if (messageReaction.emoji.name != '🔍') return;
 
     const images = new Array<string>();
     if (messageReaction.message.partial) await messageReaction.message.fetch();
+    if (messageReaction.message.author.id == this.container.client.user.id)
+      return;
 
     images.push(
       ...messageReaction.message.embeds
@@ -35,6 +37,8 @@ export class FilterListener extends Listener {
 
     if (images.length == 0) return;
     const dms = await user.createDM();
+    dms.send('Fetching similiar images...');
+
     for (const image of images) {
       const embed = new MessageEmbed();
       embed.setTitle('Visually Similar Images');
@@ -51,7 +55,8 @@ export class FilterListener extends Listener {
         )}`
       );
       if (!res) {
-        await dms.send({
+        embed.setDescription('No similiar images found... :(');
+        dms.send({
           embeds: [embed],
         });
         continue;
@@ -60,7 +65,7 @@ export class FilterListener extends Listener {
       json.shift();
 
       for (const { title, url } of json) embed.addField(title, url);
-      await dms.send({
+      dms.send({
         embeds: [embed],
       });
     }
