@@ -22,7 +22,7 @@ const verboseify = async (text: string): Promise<string> => {
   return json[0].generated_text;
 };
 
-const verboseFilter: Filter = {
+const VerboseFilter: Filter = {
   name: 'Verbose',
   id: 'verbose',
   description: 'Makes all of your messages have a word count minimum!',
@@ -35,4 +35,4 @@ const verboseFilter: Filter = {
   preview: (text) => verboseify(text),
 };
 
-export { verboseFilter };
+export { VerboseFilter };
