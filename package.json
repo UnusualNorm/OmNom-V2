@@ -31,7 +31,7 @@
     "hasbin": "^1.2.3",
     "mysql2": "^2.3.3",
     "mysql2-extended": "^1.1.1",
-    "node-fetch": "2",
+    "node-fetch": "3",
     "socks-proxy-agent": "^6.2.0",
     "uwuifier": "^4.0.5",
     "zalgo-js": "^1.0.0"
