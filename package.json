@@ -8,12 +8,13 @@
   "scripts": {
     "start": "node .",
     "start:server": "node dist/server.js",
-    "dev": "nodemon --exec \"npm run build && node\" .",
-    "dev:start": "npm run build && node .",
+    "dev": "nodemon --exec \"yarn build && node\" .",
+    "dev:start": "yarn build && node .",
     "lint": "prettier -c -w . && eslint --fix",
-    "build": "yarn build:clean && yarn build:copy && tsc",
+    "build": "yarn build:check && yarn build:clean && yarn build:copy && tsc",
     "build:clean": "rimraf dist/ lib/",
-    "build:copy": "copyfiles -u 1 src/**/*.wav dist/"
+    "build:copy": "copyfiles -u 1 src/**/*.wav dist/",
+    "build:check": "prettier -c . && eslint ."
   },
   "dependencies": {
     "@sapphire/decorators": "^4.3.4",
