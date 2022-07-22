@@ -1,17 +1,21 @@
-name: Lint
+name: Linter
 on:
   pull_request:
+  push:
 
 jobs:
   build:
+    name: Build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout the repo
+        uses: actions/checkout@v3
+
       - name: Install NodeJS
         uses: actions/setup-node@v3
         with:
-          node-version: lts/*
-      - name: Install Dependencies
+          node-version: current
+      - name: Install dependencies
         run: yarn install
-      - name: Build Project
+      - name: Build project
         run: yarn build
