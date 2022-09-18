@@ -24,7 +24,7 @@
     "@stewartmcgown/grammarly-api": "^1.1.2",
     "@unnusualnorm/tor-downloader": "^1.0.0",
     "@vitalets/google-translate-api": "^8.0.0",
-    "discord-cross-hosting": "^2.2.1",
+    "discord-cross-hosting": "^2.3.2",
     "discord-hybrid-sharding": "^1.5.3",
     "discord.js": "^13.7.0",
     "dotenv": "^16.0.1",
